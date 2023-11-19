@@ -1,0 +1,636 @@
+<!-- removal_app/templates/image_gallery.html -->
+{% load your_filter %}
+<html lang="en">
+<head>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Gallery</title>
+    <style>
+        .image-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            
+        }
+
+        h2 {
+            text-align: center;
+            margin-top: 100px;
+            margin-bottom: 10px;
+        }
+
+        .image-item {
+            width: 200px;
+            height: 200px;
+            overflow: hidden;
+            border: 1px solid #ccc;
+            position: relative; /* 追加: 相対位置指定 */
+            margin: 10px;
+            text-align: center;
+        }
+
+        .image-item img {
+            max-width: 100%;
+            max-height: 100%;
+            display: block;
+            height: auto;
+        }
+        
+        
+
+        .delete-button {
+            position: absolute;
+            top: 5%;
+            left: 13%;
+            transform: translate(-50%, -50%);
+            padding: 3px;
+            border: none;
+            cursor: pointer;
+            background-color: #ff0000;
+            color: #fff;
+            margin-top: 5px;
+            background-color: rgba(98, 99, 105, 0.5); 
+        }
+
+        .select-button {
+            position: absolute;
+            top: 83%;
+            left: 37%;
+            padding: 3px 12px;
+            border: none;
+            cursor: pointer;
+            background-color: #007bff;
+            color: #fff;
+            border-radius: 5px;
+            margin-top: 5px;
+            background-color: rgba(76, 150, 186, 0.5); 
+    }
+
+    
+
+    .center-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50vh; /* ボタンをページ全体の中央に配置 */
+    
+}
+
+.center-button button{
+    background-color:  rgba(76, 150, 186, 0.4);
+}
+
+    button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #4CAF50;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease-in-out;
+}
+
+button:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.setumei {
+    text-align: center;
+    padding-top: 100px;
+}
+
+
+
+    </style>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE-edge">
+        <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0">
+        
+        
+        <script src="https://kit.fontawesome.com/d86c726e71.js" crossorigin="anonymous"></script>
+    <style>    
+    .main_h {
+      position: fixed;
+      top: 0px;
+      max-height: 70px;
+      z-index: 999;
+      width: 100%;
+      padding-top: 17px;
+      background: none;
+      overflow: hidden;
+      -webkit-transition: all 0.3s;
+      transition: all 0.3s;
+      opacity: 0;
+      top: -100px;
+      padding-bottom: 6px;
+      font-family: "Montserrat", sans-serif;
+    }
+    @media only screen and (max-width: 766px) {
+      .main_h {
+        padding-top: 25px;
+      }
+    }
+    
+    .open-nav {
+      max-height: 400px !important;
+    }
+    .open-nav .mobile-toggle {
+      transform: rotate(-90deg);
+      -webkit-transform: rotate(-90deg);
+    }
+    
+    .sticky {
+      background-color: rgba(198, 196, 196, 0.93);
+      opacity: 1;
+      top: 0px;
+      border-bottom: 1px solid gainsboro;
+    }
+    
+    .logo {
+      width: 50px;
+      font-size: 15px;
+      color: #8f8f8f;
+      text-transform: uppercase;
+      float: left;
+      display: block;
+      margin-top: 0;
+      line-height: 1;
+      margin-bottom: 10px;
+    }
+    @media only screen and (max-width: 766px) {
+      .logo {
+        float: none;
+      }
+    }
+    
+    nav {
+      float: right;
+      width: 60%;
+    }
+    @media only screen and (max-width: 766px) {
+      nav {
+        width: 100%;
+      }
+    }
+    nav ul {
+      list-style: none;
+      overflow: hidden;
+      text-align: right;
+      float: right;
+    }
+    @media only screen and (max-width: 766px) {
+      nav ul {
+        padding-top: 10px;
+        margin-bottom: 22px;
+        float: left;
+        text-align: center;
+        width: 100%;
+      }
+    }
+    nav ul li {
+      display: inline-block;
+      margin-left: 35px;
+      line-height: 1.5;
+    }
+    @media only screen and (max-width: 766px) {
+      nav ul li {
+        width: 100%;
+        padding: 7px 0;
+        margin: 0;
+      }
+    }
+    nav ul a {
+      color: #888888;
+      text-transform: uppercase;
+      font-size: 12px;
+    }
+    
+    .mobile-toggle {
+      display: none;
+      cursor: pointer;
+      font-size: 20px;
+      position: absolute;
+      right: 22px;
+      top: 0;
+      width: 30px;
+      -webkit-transition: all 200ms ease-in;
+      -moz-transition: all 200ms ease-in;
+      transition: all 200ms ease-in;
+    }
+    @media only screen and (max-width: 766px) {
+      .mobile-toggle {
+        display: block;
+      }
+    }
+    .mobile-toggle span {
+      width: 30px;
+      height: 4px;
+      margin-bottom: 6px;
+      border-radius: 1000px;
+      background: #8f8f8f;
+      display: block;
+    }
+    
+    .row {
+      width: 100%;
+      max-width: 940px;
+      margin: 0 auto;
+      position: relative;
+      padding: 0 2%;
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      color: #8f8f8f;
+      background: white;
+      font-family: "Cardo", serif;
+      font-weight: 300;
+      -webkit-font-smoothing: antialiased;
+    }
+    
+    a {
+      text-decoration: none;
+    }
+    
+    h1 {
+      font-size: 30px;
+      line-height: 1.8;
+      text-transform: uppercase;
+      font-family: "Montserrat", sans-serif;
+    }
+    
+    p {
+      margin-bottom: 20px;
+      font-size: 17px;
+      line-height: 2;
+      text-align: center;
+    }
+    
+    .content {
+      padding: 50px 2% 250px;
+    }
+    
+    .hero {
+      position: relative;
+      background: url(http://www.philippefercha.com/cd/toggle-menu-bg.jpg) no-repeat center center fixed;
+      -webkit-background-size: cover;
+      -moz-background-size: cover;
+      background-size: cover;
+      text-align: center;
+      color: #221d1d;
+      padding-top: 110px;
+      min-height: 500px;
+      letter-spacing: 2px;
+      font-family: "Montserrat", sans-serif;
+    }
+    .hero h1 {
+      font-size: 50px;
+      line-height: 1.3;
+    }
+    .hero h1 span {
+      font-size: 25px;
+      color: rgb(17, 17, 62);
+      border-bottom: 2px solid #282921;
+      padding-bottom: 12px;
+      line-height: 3;
+    }
+    
+    .mouse {
+      display: block;
+      margin: 0 auto;
+      width: 26px;
+      height: 46px;
+      border-radius: 13px;
+      border: 2px solid #181816;
+      position: absolute;
+      bottom: 40px;
+      position: absolute;
+      left: 50%;
+      margin-left: -26px;
+    }
+    .mouse span {
+      display: block;
+      margin: 6px auto;
+      width: 2px;
+      height: 2px;
+      border-radius: 4px;
+      background: #292926;
+      border: 1px solid transparent;
+      -webkit-animation-duration: 1s;
+      animation-duration: 1s;
+      -webkit-animation-fill-mode: both;
+      animation-fill-mode: both;
+      -webkit-animation-iteration-count: infinite;
+      animation-iteration-count: infinite;
+      -webkit-animation-name: scroll;
+      animation-name: scroll;
+    }
+    
+    @-webkit-keyframes scroll {
+      0% {
+        opacity: 1;
+        -webkit-transform: translateY(0);
+        transform: translateY(0);
+      }
+    
+      100% {
+        opacity: 0;
+        -webkit-transform: translateY(20px);
+        transform: translateY(20px);
+      }
+    }
+    @keyframes scroll {
+      0% {
+        opacity: 1;
+        -webkit-transform: translateY(0);
+        -ms-transform: translateY(0);
+        transform: translateY(0);
+      }
+    
+      100% {
+        opacity: 0;
+        -webkit-transform: translateY(20px);
+        -ms-transform: translateY(20px);
+        transform: translateY(20px);
+      }
+    }
+
+    ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer {
+  padding: 2rem;
+  font-size: 15px;
+  color: #999;
+  background: #fff;
+  border-top: 1px solid #e5e7eb;
+}
+
+.footer a:hover {
+  color: #000;
+}
+
+@media (min-width: 768px) {
+  .footer {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .md-flex {
+    display: flex;
+  }
+
+  .md-flex li + li {
+    margin-left: 16px;
+  }
+}
+
+.footer ul{
+    text-align: center;
+}
+
+.footer p{
+    text-align: center;
+}
+
+.selected-images-container{
+  text-align: center;
+}
+    </style>
+
+
+    
+
+</head>
+<body>
+    <header class="main_h">
+
+        <div class="row">
+            <a class="logo" href="#">online closet</a>
+    
+            <div class="mobile-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+    
+            <nav>
+                <ul>
+                    <li><a href="{% url 'home' %}">Home</a></li>
+                    <li><a href="{% url 'remove_background' %}">Remove Background</a></li>
+                    <li><a href="{% url 'image_gallery' %}">Image Gallery</a></li>
+                    <li><a href="{% url 'fitting' %}">fitting room</a></li>
+                </ul>
+            </nav>
+    
+        </div> <!-- / row -->
+    
+    </header>
+    <div class="setumei">
+    <h1>Image Gallery</h1>
+    <p>Removbe Backgroundにて背景除去された画像が保存されています。<br>Deleteボタンを押すと画像を削除できます。<br>Selectボタンを押すとSelected Images部分に二つまで表示されます。<br>組み合わせたい画像同士を二つ選択し、ボタンを押すと試着ページへ移ります。</p>
+    </div>
+    
+<!-- Tops 画像 -->
+<h2>Tops</h2>
+<p>aiueo</p>
+<div class="image-container">
+    {% for image in images_tops %}
+        <div class="image-item">
+            <img src="{{ image }}" alt="{{ image }}">
+            
+            <button class="select-button" onclick="selectImage('{{ image }}')">Select</button>
+            <button class="delete-button" onclick="confirmDelete('{{ image | filename_from_image }}')">Delete</button>
+        </div>
+    {% endfor %}
+</div>
+
+<!-- Pants 画像 -->
+<h2>Pants</h2>
+<p>aiueo</p>
+<div class="image-container">
+    {% for image in images_pants %}
+        <div class="image-item">
+            <img src="{{ image }}" alt="{{ image }}">
+            
+            <button class="select-button" onclick="selectImage('{{ image }}')">Select</button>
+            <button class="delete-button" onclick="confirmDelete('{{ image | filename_from_image }}')">Delete</button>
+        </div>
+    {% endfor %}
+</div>
+
+<h2>Selected Images</h2>
+<div id="selected-images-container" class="selected-images-container">
+    <!-- 選択された画像が表示されます -->
+</div>
+
+<div class="center-button">
+    <button onclick="showFittingPage()">Show Fitting</button>
+</div>
+
+<div style="margin-top: 100px; margin-bottom: 100px;">
+    <!-- ここにコンテンツを配置 -->
+</div>
+
+
+<footer class="footer">
+    <ul class="md-flex">
+        <li><a href="#">トップへ</a></li>
+    </ul>
+    <p class="copyright">© 2023 Virtual fitting room</p>
+</footer>
+
+<script>
+    function showFittingPage() {
+        var image1 = document.querySelectorAll('.selected-image')[0].src;
+        var image2 = document.querySelectorAll('.selected-image')[1].src;
+
+        // ページ間のパスを修正することを忘れずに
+        var fittingURL = `/fitting/?image1=${encodeURIComponent(image1)}&image2=${encodeURIComponent(image2)}`;
+
+        // fitting.html にリダイレクト
+        window.location.href = fittingURL;
+    }
+</script>
+
+
+<script>
+    var selectedImages = [];
+
+    function selectImage(imagePath) {
+        // もし選択された画像がすでに2枚以上ある場合、最も古い選択を削除して新しい選択に置き換える
+        if (selectedImages.length >= 2) {
+            selectedImages.shift();
+        }
+        selectedImages.push(imagePath);
+        displaySelectedImages();
+    }
+
+    function displaySelectedImages() {
+        var selectedImagesContainer = document.getElementById('selected-images-container');
+        selectedImagesContainer.innerHTML = '';
+
+        selectedImages.forEach(function(imagePath) {
+            var imageElement = document.createElement('img');
+            imageElement.src = imagePath;
+            imageElement.alt = imagePath;
+            imageElement.className = 'selected-image';
+            selectedImagesContainer.appendChild(imageElement);
+        });
+    }
+
+    function moveToFittingPage() {
+        // 選択された画像が2枚以上ある場合のみ移動処理を実行
+        if (selectedImages.length >= 2) {
+            // Fitting.htmlに選択された画像を渡してページ遷移
+            var url = '/fitting.html?image1=' + selectedImages[0] + '&image2=' + selectedImages[1];
+            window.location.href = url;
+        } else {
+            alert('Please select at least two images.');
+        }
+    }
+</script>
+
+
+
+    <script>
+function confirmDelete(imagePath) {
+    if (confirm("Are you sure you want to delete this image?")) {
+        deleteImage(imagePath);
+    }
+}
+
+
+function deleteImage(imagePath) {
+    var fileName = imagePath.split('/').pop();
+    var csrftoken = getCookie('csrftoken');
+
+    $.ajax({
+        url: `/delete_image/${fileName}/`,
+        method: 'DELETE',
+        headers: {'X-CSRFToken': csrftoken},
+        success: function (data) {
+            console.log(data.message);
+            // 削除成功時に再読み込みを行う
+            location.reload();
+        },
+        error: function (error) {
+            console.error(error.responseText);
+        }
+    });
+}
+
+
+</script>
+
+
+<script>
+// CSRFトークンをCookieから取得する関数
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+    </script>
+
+
+<script src="https://code.jquery.com/jquery-1.9.1.js"></script>
+<script>
+// Sticky Header
+$(window).scroll(function() {
+
+if ($(window).scrollTop() > 100) {
+    $('.main_h').addClass('sticky');
+} else {
+    $('.main_h').removeClass('sticky');
+}
+});
+
+// Mobile Navigation
+$('.mobile-toggle').click(function() {
+if ($('.main_h').hasClass('open-nav')) {
+    $('.main_h').removeClass('open-nav');
+} else {
+    $('.main_h').addClass('open-nav');
+}
+});
+
+$('.main_h li a').click(function() {
+if ($('.main_h').hasClass('open-nav')) {
+    $('.navigation').removeClass('open-nav');
+    $('.main_h').removeClass('open-nav');
+}
+});
+
+// navigation scroll lijepo radi materem
+$('nav a').click(function(event) {
+var id = $(this).attr("href");
+var offset = 70;
+var target = $(id).offset().top - offset;
+$('html, body').animate({
+    scrollTop: target
+}, 500);
+event.preventDefault();
+});
+</script>
+    
+</body>
+</html>

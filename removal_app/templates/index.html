@@ -1,0 +1,426 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Welcome to My Website</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE-edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0">
+    
+
+    <script src="https://kit.fontawesome.com/d86c726e71.js" crossorigin="anonymous"></script>
+<style>    
+.main_h {
+  position: fixed;
+  top: 0px;
+  max-height: 70px;
+  z-index: 999;
+  width: 100%;
+  padding-top: 17px;
+  background: none;
+  overflow: hidden;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+  opacity: 0;
+  top: -100px;
+  padding-bottom: 6px;
+  font-family: "Montserrat", sans-serif;
+}
+@media only screen and (max-width: 766px) {
+  .main_h {
+    padding-top: 25px;
+  }
+}
+
+.open-nav {
+  max-height: 400px !important;
+}
+.open-nav .mobile-toggle {
+  transform: rotate(-90deg);
+  -webkit-transform: rotate(-90deg);
+}
+
+.sticky {
+  background-color: rgba(198, 196, 196, 0.93);
+  opacity: 1;
+  top: 0px;
+  border-bottom: 1px solid gainsboro;
+}
+
+.logo {
+  width: 50px;
+  font-size: 15px;
+  color: #8f8f8f;
+  text-transform: uppercase;
+  float: left;
+  display: block;
+  margin-top: 0;
+  line-height: 1;
+  margin-bottom: 10px;
+}
+@media only screen and (max-width: 766px) {
+  .logo {
+    float: none;
+  }
+}
+
+nav {
+  float: right;
+  width: 60%;
+}
+@media only screen and (max-width: 766px) {
+  nav {
+    width: 100%;
+  }
+}
+nav ul {
+  list-style: none;
+  overflow: hidden;
+  text-align: right;
+  float: right;
+}
+@media only screen and (max-width: 766px) {
+  nav ul {
+    padding-top: 10px;
+    margin-bottom: 22px;
+    float: left;
+    text-align: center;
+    width: 100%;
+  }
+}
+nav ul li {
+  display: inline-block;
+  margin-left: 35px;
+  line-height: 1.5;
+}
+@media only screen and (max-width: 766px) {
+  nav ul li {
+    width: 100%;
+    padding: 7px 0;
+    margin: 0;
+  }
+}
+nav ul a {
+  color: #888888;
+  text-transform: uppercase;
+  font-size: 12px;
+}
+
+.mobile-toggle {
+  display: none;
+  cursor: pointer;
+  font-size: 20px;
+  position: absolute;
+  right: 22px;
+  top: 0;
+  width: 30px;
+  -webkit-transition: all 200ms ease-in;
+  -moz-transition: all 200ms ease-in;
+  transition: all 200ms ease-in;
+}
+@media only screen and (max-width: 766px) {
+  .mobile-toggle {
+    display: block;
+  }
+}
+.mobile-toggle span {
+  width: 30px;
+  height: 4px;
+  margin-bottom: 6px;
+  border-radius: 1000px;
+  background: #8f8f8f;
+  display: block;
+}
+
+.row {
+  width: 100%;
+  max-width: 940px;
+  margin: 0 auto;
+  position: relative;
+  padding: 0 2%;
+  text-align: center;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  color: #8f8f8f;
+  background: white;
+  font-family: "Cardo", serif;
+  font-weight: 300;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+    color: #999;
+  text-decoration: none;
+}
+
+h1 {
+  font-size: 30px;
+  line-height: 1.8;
+  text-transform: uppercase;
+  font-family: "Montserrat", sans-serif;
+}
+
+
+
+
+p {
+  margin-bottom: 20px;
+  font-size: 17px;
+  line-height: 2;
+}
+
+.content {
+  padding: 50px 2% 250px;
+}
+
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer {
+  padding: 2rem;
+  font-size: 15px;
+  color: #999;
+  background: #fff;
+  border-top: 1px solid #e5e7eb;
+}
+
+.footer ul{
+    text-align: center;
+}
+
+.footer p{
+    text-align: center;
+}
+
+
+.footer a:hover {
+  color: #000;
+}
+
+@media (min-width: 768px) {
+  .footer {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .md-flex {
+    display: flex;
+  }
+
+  .md-flex li + li {
+    margin-left: 16px;
+  }
+}
+
+
+.hero {
+  position: relative;
+  background: url(http://www.philippefercha.com/cd/toggle-menu-bg.jpg) no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  background-size: cover;
+  text-align: center;
+  color: #221d1d;
+  padding-top: 110px;
+  min-height: 500px;
+  letter-spacing: 2px;
+  font-family: "Montserrat", sans-serif;
+}
+.hero h1 {
+  font-size: 50px;
+  line-height: 1.3;
+}
+.hero h1 span {
+  font-size: 25px;
+  color: rgb(17, 17, 62);
+  border-bottom: 2px solid #282921;
+  padding-bottom: 12px;
+  line-height: 3;
+}
+
+.mouse {
+  display: block;
+  margin: 0 auto;
+  width: 26px;
+  height: 46px;
+  border-radius: 13px;
+  border: 2px solid #181816;
+  position: absolute;
+  bottom: 40px;
+  position: absolute;
+  left: 50%;
+  margin-left: -26px;
+}
+.mouse span {
+  display: block;
+  margin: 6px auto;
+  width: 2px;
+  height: 2px;
+  border-radius: 4px;
+  background: #292926;
+  border: 1px solid transparent;
+  -webkit-animation-duration: 1s;
+  animation-duration: 1s;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  -webkit-animation-iteration-count: infinite;
+  animation-iteration-count: infinite;
+  -webkit-animation-name: scroll;
+  animation-name: scroll;
+}
+
+@-webkit-keyframes scroll {
+  0% {
+    opacity: 1;
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+  }
+
+  100% {
+    opacity: 0;
+    -webkit-transform: translateY(20px);
+    transform: translateY(20px);
+  }
+}
+@keyframes scroll {
+  0% {
+    opacity: 1;
+    -webkit-transform: translateY(0);
+    -ms-transform: translateY(0);
+    transform: translateY(0);
+  }
+
+  100% {
+    opacity: 0;
+    -webkit-transform: translateY(20px);
+    -ms-transform: translateY(20px);
+    transform: translateY(20px);
+  }
+}
+
+
+
+.zyokyoform {
+    display: inline-block;
+    padding: 8px 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: rgba(255, 255, 255, 0.7); /* 半透明の背景色 */
+    color: #333;
+    text-decoration: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.zyokyoform:hover {
+    background-color: rgba(255, 255, 255, 0.9); /* ホバー時の背景色 */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+</style>
+</head>
+<body>
+    <header class="main_h">
+
+        <div class="row">
+            <a class="logo" href="#">virtual fitting room</a>
+    
+            <div class="mobile-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+    
+            <nav>
+                <ul>
+                    <li><a href="{% url 'home' %}">Home</a></li>
+                    <li><a href="{% url 'remove_background' %}">Remove Background</a></li>
+                    <li><a href="{% url 'image_gallery' %}">Image Gallery</a></li>
+                    <li><a href="{% url 'fitting' %}">fitting room</a></li>
+                </ul>
+            </nav>
+    
+        </div> <!-- / row -->
+    
+    </header>
+    
+    <div class="hero">
+    
+        <h1><span> Welcom to my website
+        </span><br>Virtual fitting room</h1>
+    
+        <div class="mouse">
+            <span></span>
+        </div>
+    
+    </div>
+
+    <div style="margin-top: 300px; margin-bottom: 300px;"></div>
+    
+    <div class="row content">
+        <h1 class="sec01">製作背景</h1>
+        <p>通販サイトなどで洋服を買う際に悩んだり、買って失敗した経験はありますか？<br>情報化が進み、多くの人々が通販での洋服の買い物経験があるのではと思います。<br>私自身、メルカリなど通販で洋服を購入することが多いのですが、<br>自分にこの服は自分の雰囲気に合うだろうか、サイズ感はどうだろうかと悩むことが多いです。<br>ときには、商品が届いて実際に来てみたら、自分には似合わないな、<br>自分の普段着る洋服の系統に合わないなということが何回もありました。<br>そんな時、通販サイトの画像を、自分の持っている洋服などと一緒に試着のように合わせてみることができれば、<br>通販での買い物の失敗や悩みを軽減できるのではと思いこのようなサービスを作成するに至りました。<br>ぜひ通販サイトでの買い物の際に使用してみてください！</p>
+
+        <a class="zyokyoform" href="{% url 'remove_background' %}">Remove Background</a>
+    </div>
+
+
+    <div style="margin-top: 600px; margin-bottom: 600px;">
+        <!-- ここにコンテンツを配置 -->
+    </div>
+
+    <footer class="footer">
+        <ul class="md-flex">
+            <li><a href="#">トップ</a></li>
+        </ul>
+        <p class="copyright">© 2023 Virtual fitting room</p>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-1.9.1.js"></script>
+<script>
+// Sticky Header
+$(window).scroll(function() {
+
+if ($(window).scrollTop() > 100) {
+    $('.main_h').addClass('sticky');
+} else {
+    $('.main_h').removeClass('sticky');
+}
+});
+
+// Mobile Navigation
+$('.mobile-toggle').click(function() {
+if ($('.main_h').hasClass('open-nav')) {
+    $('.main_h').removeClass('open-nav');
+} else {
+    $('.main_h').addClass('open-nav');
+}
+});
+
+$('.main_h li a').click(function() {
+if ($('.main_h').hasClass('open-nav')) {
+    $('.navigation').removeClass('open-nav');
+    $('.main_h').removeClass('open-nav');
+}
+});
+
+// navigation scroll lijepo radi materem
+$('nav a').click(function(event) {
+var id = $(this).attr("href");
+var offset = 70;
+var target = $(id).offset().top - offset;
+$('html, body').animate({
+    scrollTop: target
+}, 500);
+event.preventDefault();
+});
+</script>
+</body>
+</html>

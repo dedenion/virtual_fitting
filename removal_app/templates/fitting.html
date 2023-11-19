@@ -1,0 +1,620 @@
+<!-- fitting.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <title>Fitting Page</title>
+    <style>
+        /* 必要なスタイルを追加 */
+        .fitting-container {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 50px;
+        }
+
+        .fitting-image {
+            max-width: 400px;
+            max-height: 400px;
+        }
+
+                .setumei {
+    text-align: center;
+    padding-top: 100px;
+}
+
+.hitotume {
+    text-align: center;
+
+}
+
+.hutatume {
+    text-align: center;
+}
+
+.image-container {
+    display: flex;
+    justify-content: center;
+}
+
+.image-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 10px;
+}
+
+.default-image {
+    width: 200px;
+    height: 200px;
+    background-color: lightgray;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+
+.zoom-in-button {
+    margin: 0 5px;
+  opacity: 0.7; /* 半透明にする */
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* 立体感を出すための影 */
+  border: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  font-weight: bold;
+  cursor: pointer;
+  
+}
+
+.zoom-out-button {
+    margin: 0 5px;
+  opacity: 0.7; /* 半透明にする */
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* 立体感を出すための影 */
+  border: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  font-weight: bold;
+  cursor: pointer;
+  
+}
+
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer {
+  padding: 2rem;
+  font-size: 15px;
+  color: #999;
+  background: #fff;
+  border-top: 1px solid #e5e7eb;
+}
+
+.footer a:hover {
+  color: #000;
+}
+
+@media (min-width: 768px) {
+  .footer {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .md-flex {
+    display: flex;
+  }
+
+  .md-flex li + li {
+    margin-left: 16px;
+  }
+}
+
+.footer ul{
+    text-align: center;
+}
+
+.footer p{
+    text-align: center;
+}
+
+    </style>
+    
+
+
+
+</style>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE-edge">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0">
+
+
+<script src="https://kit.fontawesome.com/d86c726e71.js" crossorigin="anonymous"></script>
+<style>    
+.main_h {
+position: fixed;
+top: 0px;
+max-height: 70px;
+z-index: 999;
+width: 100%;
+padding-top: 17px;
+background: none;
+overflow: hidden;
+-webkit-transition: all 0.3s;
+transition: all 0.3s;
+opacity: 0;
+top: -100px;
+padding-bottom: 6px;
+font-family: "Montserrat", sans-serif;
+}
+@media only screen and (max-width: 766px) {
+.main_h {
+padding-top: 25px;
+}
+}
+
+.open-nav {
+max-height: 400px !important;
+}
+.open-nav .mobile-toggle {
+transform: rotate(-90deg);
+-webkit-transform: rotate(-90deg);
+}
+
+.sticky {
+background-color: rgba(198, 196, 196, 0.93);
+opacity: 1;
+top: 0px;
+border-bottom: 1px solid gainsboro;
+}
+
+.logo {
+width: 50px;
+font-size: 15px;
+color: #8f8f8f;
+text-transform: uppercase;
+float: left;
+display: block;
+margin-top: 0;
+line-height: 1;
+margin-bottom: 10px;
+}
+@media only screen and (max-width: 766px) {
+.logo {
+float: none;
+}
+}
+
+nav {
+float: right;
+width: 60%;
+}
+@media only screen and (max-width: 766px) {
+nav {
+width: 100%;
+}
+}
+nav ul {
+list-style: none;
+overflow: hidden;
+text-align: right;
+float: right;
+}
+@media only screen and (max-width: 766px) {
+nav ul {
+padding-top: 10px;
+margin-bottom: 22px;
+float: left;
+text-align: center;
+width: 100%;
+}
+}
+nav ul li {
+display: inline-block;
+margin-left: 35px;
+line-height: 1.5;
+}
+@media only screen and (max-width: 766px) {
+nav ul li {
+width: 100%;
+padding: 7px 0;
+margin: 0;
+}
+}
+nav ul a {
+color: #888888;
+text-transform: uppercase;
+font-size: 12px;
+}
+
+.mobile-toggle {
+display: none;
+cursor: pointer;
+font-size: 20px;
+position: absolute;
+right: 22px;
+top: 0;
+width: 30px;
+-webkit-transition: all 200ms ease-in;
+-moz-transition: all 200ms ease-in;
+transition: all 200ms ease-in;
+}
+@media only screen and (max-width: 766px) {
+.mobile-toggle {
+display: block;
+}
+}
+.mobile-toggle span {
+width: 30px;
+height: 4px;
+margin-bottom: 6px;
+border-radius: 1000px;
+background: #8f8f8f;
+display: block;
+}
+
+.row {
+width: 100%;
+max-width: 940px;
+margin: 0 auto;
+position: relative;
+padding: 0 2%;
+}
+
+* {
+box-sizing: border-box;
+}
+
+body {
+color: #8f8f8f;
+background: white;
+font-family: "Cardo", serif;
+font-weight: 300;
+-webkit-font-smoothing: antialiased;
+}
+
+a {
+text-decoration: none;
+}
+
+h1 {
+font-size: 30px;
+line-height: 1.8;
+text-transform: uppercase;
+font-family: "Montserrat", sans-serif;
+}
+
+p {
+margin-bottom: 20px;
+font-size: 17px;
+line-height: 2;
+text-align: center;
+}
+
+.content {
+padding: 50px 2% 250px;
+}
+
+.hero {
+position: relative;
+background: url(http://www.philippefercha.com/cd/toggle-menu-bg.jpg) no-repeat center center fixed;
+-webkit-background-size: cover;
+-moz-background-size: cover;
+background-size: cover;
+text-align: center;
+color: #221d1d;
+padding-top: 110px;
+min-height: 500px;
+letter-spacing: 2px;
+font-family: "Montserrat", sans-serif;
+}
+.hero h1 {
+font-size: 50px;
+line-height: 1.3;
+}
+.hero h1 span {
+font-size: 25px;
+color: rgb(17, 17, 62);
+border-bottom: 2px solid #282921;
+padding-bottom: 12px;
+line-height: 3;
+}
+
+.mouse {
+display: block;
+margin: 0 auto;
+width: 26px;
+height: 46px;
+border-radius: 13px;
+border: 2px solid #181816;
+position: absolute;
+bottom: 40px;
+position: absolute;
+left: 50%;
+margin-left: -26px;
+}
+.mouse span {
+display: block;
+margin: 6px auto;
+width: 2px;
+height: 2px;
+border-radius: 4px;
+background: #292926;
+border: 1px solid transparent;
+-webkit-animation-duration: 1s;
+animation-duration: 1s;
+-webkit-animation-fill-mode: both;
+animation-fill-mode: both;
+-webkit-animation-iteration-count: infinite;
+animation-iteration-count: infinite;
+-webkit-animation-name: scroll;
+animation-name: scroll;
+}
+
+@-webkit-keyframes scroll {
+0% {
+opacity: 1;
+-webkit-transform: translateY(0);
+transform: translateY(0);
+}
+
+100% {
+opacity: 0;
+-webkit-transform: translateY(20px);
+transform: translateY(20px);
+}
+}
+@keyframes scroll {
+0% {
+opacity: 1;
+-webkit-transform: translateY(0);
+-ms-transform: translateY(0);
+transform: translateY(0);
+}
+
+100% {
+opacity: 0;
+-webkit-transform: translateY(20px);
+-ms-transform: translateY(20px);
+transform: translateY(20px);
+}
+}
+</style>
+</head>
+<body>
+
+
+    <header class="main_h">
+
+        <div class="row">
+            <a class="logo" href="#">online closet</a>
+    
+            <div class="mobile-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+    
+            <nav>
+                <ul>
+                    <li><a href="{% url 'home' %}">Home</a></li>
+                    <li><a href="{% url 'remove_background' %}">Remove Background</a></li>
+                    <li><a href="{% url 'image_gallery' %}">Image Gallery</a></li>
+                    <li><a href="{% url 'fitting' %}">fitting room</a></li>
+                </ul>
+            </nav>
+    
+        </div> <!-- / row -->
+    
+    </header>
+    <div class="setumei">
+    <h1>Fitting Page</h1>
+    <p>ここではImage Galleryで選んだ二つの画像を表示しています。<br>ドラッグして好きな場所に動かすことができます。<br>また、画像のサイズを＋ボタン－ボタンで調整できるので、<br>実際に着た時のサイズ感に合わせて調整してみてください。<br></p>
+    </div>
+
+    <div style="margin-top: 100px; margin-bottom: 100px;"></div>
+    
+
+<!-- ドラッグアンドドロップ可能なスペース -->
+<div class="image-container">
+    <!-- Tops画像とボタン -->
+    <div class="image-item">
+        {% if selectedImages.0 %}
+            <img id="fitting-image1" src="{{ selectedImages.0 }}" alt="Image1" width="200" height="200">
+        {% else %}
+            <div class="default-image" style="width: 200px; height: 200px; background-color: lightgray; display: flex; justify-content: center; align-items: center;">
+                <p>No image</p>
+            </div>
+        {% endif %}
+        <div class="hitotume">
+            <p>Image1</p>
+            <button class="zoom-in-button" data-target="fitting-image1">+</button>
+            <button class="zoom-out-button" data-target="fitting-image1">-</button>
+        </div>
+    </div>
+    <!-- Pants画像とボタン -->
+    <div class="image-item">
+        {% if selectedImages.1 %}
+            <img id="fitting-image2" src="{{ selectedImages.1 }}" alt="Image2" width="200" height="200">
+        {% else %}
+            <div class="default-image" style="width: 200px; height: 200px; background-color: lightgray; display: flex; justify-content: center; align-items: center;">
+                <p>No image</p>
+            </div>
+        {% endif %}
+        <div class="hutatume">
+            <p>Image2</p>
+            <button class="zoom-in-button" data-target="fitting-image2">+</button>
+            <button class="zoom-out-button" data-target="fitting-image2">-</button>
+        </div>
+    </div>
+</div>
+
+
+
+<div style="margin-top: 600px; margin-bottom: 600px;">
+    <!-- ここにコンテンツを配置 -->
+</div>
+
+<footer class="footer">
+    <ul class="md-flex">
+        <li><a href="#">トップへ</a></li>
+    </ul>
+    <p class="copyright">© 2023 Virtual fitting room</p>
+</footer>
+
+<!-- 以下に追加したコード -->
+<script>
+    var zIndexCounter = 1;
+    var isDragging = false;
+    var activeImage = null;
+    var initialZIndex = 1;
+
+    // ドラッグを開始したとき
+    $(".image-container img").on("mousedown", function (e) {
+        isDragging = true;
+        activeImage = this;
+        initialZIndex = $(activeImage).css("z-index");
+        $(activeImage).css("z-index", zIndexCounter++);
+    });
+
+    $(document).on("mouseup", function () {
+        isDragging = false;
+    });
+
+    $(".image-container img").on("mouseup", function () {
+        if (activeImage && activeImage !== this) {
+            $(activeImage).css("z-index", initialZIndex);
+            initialZIndex += 1;
+            activeImage = this;
+            $(activeImage).css("z-index", zIndexCounter++);
+        }
+    });
+
+    $(document).on("mousemove", function (e) {
+        if (isDragging) {
+            var offsetX = e.pageX - $(activeImage).width() / 2;
+            var offsetY = e.pageY - $(activeImage).height() / 2;
+            $(activeImage).css({
+                "position": "absolute",
+                "left": offsetX + "px",
+                "top": offsetY + "px"
+            });
+        }
+    });
+
+    function getOverlappedImages(activeImage) {
+        return $(".image-container img").filter(function () {
+            return this !== activeImage && isOverlapping(activeImage, this);
+        });
+    }
+
+    function isOverlapping(elem1, elem2) {
+        var rect1 = elem1.getBoundingClientRect();
+        var rect2 = elem2.getBoundingClientRect();
+        return (
+            rect1.left < rect2.right &&
+            rect1.right > rect2.left &&
+            rect1.top < rect2.bottom &&
+            rect1.bottom > rect2.top
+        );
+    }
+</script>
+
+
+<script src="https://unpkg.com/packery@2/dist/packery.pkgd.min.js"></script>
+<script src="https://unpkg.com/draggabilly@2/dist/draggabilly.pkgd.min.js"></script>
+
+<style>
+    .grid-item { width: 25%; }
+    .grid-item--width2 { width: 50%; }
+</style>
+
+
+<script>
+    var $grid = $('.grid').packery({
+        itemSelector: '.grid-item',
+        // columnWidth helps with drop positioning
+        columnWidth: 100
+    });
+
+    // make all grid-items draggable
+    $grid.find('.grid-item').each( function( i, gridItem ) {
+        var draggie = new Draggabilly( gridItem );
+        // bind drag events to Packery
+        $grid.packery( 'bindDraggabillyEvents', draggie );
+    });
+</script>
+    <!-- JavaScriptコードを埋め込む -->
+    <script>
+        $(".zoom-in-button").on("click", function () {
+            var targetImageId = $(this).data("target");
+            var targetImage = $("#" + targetImageId);
+            var currentWidth = targetImage.width();
+            var currentHeight = targetImage.height();
+            
+            // 画像の拡大処理（幅と高さを増加）
+            targetImage.css("width", currentWidth * 1.2 + "px");
+            targetImage.css("height", currentHeight * 1.2 + "px");
+        });
+
+        $(".zoom-out-button").on("click", function () {
+            var targetImageId = $(this).data("target");
+            var targetImage = $("#" + targetImageId);
+            var currentWidth = targetImage.width();
+            var currentHeight = targetImage.height();
+            
+            // 画像の縮小処理（幅と高さを減少）
+            targetImage.css("width", currentWidth * 0.8 + "px");
+            targetImage.css("height", currentHeight * 0.8 + "px");
+        });
+    </script>
+
+
+<script src="https://code.jquery.com/jquery-1.9.1.js"></script>
+<script>
+// Sticky Header
+$(window).scroll(function() {
+
+if ($(window).scrollTop() > 100) {
+    $('.main_h').addClass('sticky');
+} else {
+    $('.main_h').removeClass('sticky');
+}
+});
+
+// Mobile Navigation
+$('.mobile-toggle').click(function() {
+if ($('.main_h').hasClass('open-nav')) {
+    $('.main_h').removeClass('open-nav');
+} else {
+    $('.main_h').addClass('open-nav');
+}
+});
+
+$('.main_h li a').click(function() {
+if ($('.main_h').hasClass('open-nav')) {
+    $('.navigation').removeClass('open-nav');
+    $('.main_h').removeClass('open-nav');
+}
+});
+
+// navigation scroll lijepo radi materem
+$('nav a').click(function(event) {
+var id = $(this).attr("href");
+var offset = 70;
+var target = $(id).offset().top - offset;
+$('html, body').animate({
+    scrollTop: target
+}, 500);
+event.preventDefault();
+});
+</script>
+
+
+</body>
+</html>
