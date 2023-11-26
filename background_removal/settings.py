@@ -28,10 +28,10 @@ SECRET_KEY = 'fhalfahghiaghiahvhpg843ytygsjroeigjirinbknitrh348ujijguj8ujgdngire
 
 # SECURITY WARNING: don't run with d
 # DEBUG モードを本番環境では無効化する
-DEBUG = True
+DEBUG = False
 
 # 本番環境の設定
-ALLOWED_HOSTS = ["your_domain.com", "www.your_domain.com"]
+ALLOWED_HOSTS = ['*']
 
 # データベース設定 (例: PostgreSQL を使用)
 DATABASES = {
