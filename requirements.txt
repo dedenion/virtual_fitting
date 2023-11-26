@@ -1,5 +1,4 @@
 absl-py==1.4.0
-alabaster @ file:///home/ktietz/src/ci/alabaster_1611921544520/work
 anaconda-anon-usage @ file:///C:/b/abs_95v3x0wy8p/croot/anaconda-anon-usage_1697038984188/work
 anaconda-client==1.7.2
 anaconda-cloud-auth @ file:///C:/b/abs_410afndtyf/croot/anaconda-cloud-auth_1697462767853/work
