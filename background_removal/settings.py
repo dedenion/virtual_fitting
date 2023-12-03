@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
+import cloudinary
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -65,6 +66,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    'cloudinary_storage',
+    'cloudinary',
     "removal_app",
 ]
 
@@ -147,6 +150,9 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
+# settings.py
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
@@ -155,3 +161,12 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 MODEL_PATH = BASE_DIR / "keras_Model.h5"
 LABELS_PATH = BASE_DIR / "labels.txt"
+
+#setting.pyの最後に追加でOK
+CLOUDINARY_STORAGE  = {
+    'CLOUD_NAME':'hrruhzizm',
+    'API_KEY': env('575338112131427'),
+    'API_SECRET': env('LmOLd8JjGCpljI2pAZFjpgvSe5o'),
+    'EXCLUDE_DELETE_ORPHANED_MEDIA_PATHS':()
+}
+
