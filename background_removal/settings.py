@@ -29,7 +29,7 @@ SECRET_KEY = 'fhalfahghiaghiahvhpg843ytygsjroeigjirinbknitrh348ujijguj8ujgdngire
 
 # SECURITY WARNING: don't run with d
 # DEBUG モードを本番環境では無効化する
-DEBUG = False
+DEBUG = True
 
 # 本番環境の設定
 ALLOWED_HOSTS = ['*']
