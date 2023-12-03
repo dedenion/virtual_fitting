@@ -1,1 +1,1 @@
-web: gunicorn background_removal.wsgi:application --log-file -
+web: gunicorn virtualfitting-room.wsgi:application --log-file -

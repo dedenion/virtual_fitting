@@ -10,7 +10,7 @@ from removal_app import views
 
 
 urlpatterns = [
-    path('/', views.YourTemplateView.as_view(), name='home'),
+    path('', views.YourTemplateView.as_view(), name='home'),
     path('remove_background/', views.remove_background, name='remove_background'),
     path('image_gallery/', views.image_gallery, name='image_gallery'),
     path('delete_image/<str:filename>/', delete_image, name='delete_image'),

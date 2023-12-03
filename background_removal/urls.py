@@ -29,7 +29,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('remove_background/', include('removal_app.urls')),
     path('image_gallery/', views.image_gallery, name='image_gallery'),  # image_galleryのパスを追加
-    path('/', TemplateView.as_view(template_name='index.html'), name='home'),  # トップページ用のビューを追加
+    path('', TemplateView.as_view(template_name='index.html'), name='home'),  # トップページ用のビューを追加
     path('delete_image/<str:filename>/', views.delete_image, name='delete_image'),
     path('fitting/', views.fitting, name='fitting')
 ]
