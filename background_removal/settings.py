@@ -165,8 +165,8 @@ LABELS_PATH = BASE_DIR / "labels.txt"
 #setting.pyの最後に追加でOK
 CLOUDINARY_STORAGE  = {
     'CLOUD_NAME':'hrruhzizm',
-    'API_KEY': env('575338112131427'),
-    'API_SECRET': env('LmOLd8JjGCpljI2pAZFjpgvSe5o'),
+    'API_KEY': '575338112131427',
+    'API_SECRET': 'LmOLd8JjGCpljI2pAZFjpgvSe5o',
     'EXCLUDE_DELETE_ORPHANED_MEDIA_PATHS':()
 }
 
