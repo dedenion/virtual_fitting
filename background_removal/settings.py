@@ -13,10 +13,13 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 import os
 import cloudinary
+import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+env = environ.Env()
+env.read_env(os.path.join(BASE_DIR, '.env'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -34,23 +37,6 @@ DEBUG = True
 # 本番環境の設定
 ALLOWED_HOSTS = ['*']
 
-# データベース設定 (例: PostgreSQL を使用)
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "your_db_name",
-        "USER": "your_db_user",
-        "PASSWORD": "your_db_password",
-        "HOST": "localhost",  # データベースのホスト名
-        "PORT": "",  # データベースのポート番号
-    }
-}
-
-# Static ファイルの設定
-STATIC_URL = "/static/"  # URL のルートに "/static/" を追加
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static")
-]
 
 
 # その他の設定は変更なし
@@ -69,6 +55,8 @@ INSTALLED_APPS = [
     'cloudinary_storage',
     'cloudinary',
     "removal_app",
+    'cloudinary', # 追加
+    'cloudinary_storage', # 追加
 ]
 
 MIDDLEWARE = [
@@ -102,14 +90,8 @@ TEMPLATES = [
 WSGI_APPLICATION = "background_removal.wsgi.application"
 
 
-# Database
-# https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+    'default': env.db(),
 }
 
 
@@ -135,6 +117,8 @@ TIME_ZONE = "Asia/Tokyo"
 
 USE_I18N = True
 
+USE_L10N = True
+
 USE_TZ = True
 
 
@@ -142,7 +126,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -157,16 +141,13 @@ DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 
 MODEL_PATH = BASE_DIR / "keras_Model.h5"
 LABELS_PATH = BASE_DIR / "labels.txt"
 
-#setting.pyの最後に追加でOK
-CLOUDINARY_STORAGE  = {
-    'CLOUD_NAME':'hrruhzizm',
-    'API_KEY': '575338112131427',
-    'API_SECRET': 'LmOLd8JjGCpljI2pAZFjpgvSe5o',
-    'EXCLUDE_DELETE_ORPHANED_MEDIA_PATHS':()
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': env('CLOUDINARY_NAME'),
+    'API_KEY': env('CLOUDINARY_API_KEY'),
+    'API_SECRET': env('CLOUDINARY_API_SECRET'),
 }
-
