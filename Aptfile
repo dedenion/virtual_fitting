@@ -1,0 +1,4 @@
+# Aptfileに必要なパッケージを追加
+libxml2-dev
+libopencv-dev
+# 他の必要なパッケージ
