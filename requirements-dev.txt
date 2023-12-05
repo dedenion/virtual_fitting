@@ -31,3 +31,4 @@ django-cloudinary-storage~=0.3.0
 python-decouple==3.3
 rembg
 typing-extensions==3.6.6
+scipy==1.7.3
