@@ -7,7 +7,7 @@ contourpy
 cycler==0.12.1
 Django==3.2.8
 fonttools==4.44.0
-gunicorn
+gunicorn==21.2.0
 tensorflow
 keras==2.13.1
 kiwisolver==1.4.5
