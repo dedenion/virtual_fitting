@@ -1,1 +1,1 @@
-web: gunicorn virtualfitting-room.wsgi:application --log-file -
+web: gunicorn virtualfitting-room.wsgi --log-file -

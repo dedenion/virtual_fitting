@@ -1,0 +1,10 @@
+# Ignore the virtual environment
+myvenv/
+
+# Ignore the Heroku directory
+heroku/
+
+# Ignore other specific files
+20231205030753_6ee843c5-c576-4f08-9150-c75f586c5d31_tops.jpg
+end
+heroku-linux-x64.tar.gz

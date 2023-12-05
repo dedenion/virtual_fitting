@@ -12,7 +12,7 @@ import rembg
 import base64
 from PIL import Image, ImageOps
 import io
-from keras.models import load_model
+from tensorflow.keras.models import load_model
 from PIL import Image, ImageOps
 import numpy as np
 from django import template
