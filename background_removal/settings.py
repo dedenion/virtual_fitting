@@ -140,7 +140,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+
 
 MEDIA_URL = '/media/'
 
