@@ -8,7 +8,8 @@ asgiref==3.7.2
 Django==3.2.8
 fonttools==4.44.0
 gunicorn==21.2.0
-tensorflow-cpu==2.6.0
+tensorflow-cpu>=2.6.0, <2.7.0
+
 keras<=2.7.0
 numpy>=1.22.0, <1.24.0
 
