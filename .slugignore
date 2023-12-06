@@ -1,0 +1,4 @@
+/app/.env
+/app/.gitignore
+/app/db.sqlite3
+/app/Pipfile.lock/app/Pipfile
