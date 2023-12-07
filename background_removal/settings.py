@@ -3,7 +3,7 @@
 from pathlib import Path
 import os
 from decouple import Config
-from dj_database_url import parse as dburl
+from dj_database_url 
 import cloudinary
 import environ
 
@@ -64,7 +64,7 @@ WSGI_APPLICATION = "background_removal.wsgi.application"
 
 
 DATABASES = {
-    'default': env.db(),
+    'default': dj_database_url.config(default='mysql://user:password@host/database'),
 }
 
 AUTH_PASSWORD_VALIDATORS = [
