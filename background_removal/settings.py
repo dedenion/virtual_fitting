@@ -3,7 +3,7 @@
 from pathlib import Path
 import os
 from decouple import Config
-import dj_database_url
+import dj_database_url 
 import cloudinary
 import environ
 
@@ -63,9 +63,18 @@ TEMPLATES = [
 WSGI_APPLICATION = "background_removal.wsgi.application"
 
 
-# Herokuの環境変数からDATABASE_URLを取得
 DATABASES = {
-    'default': dj_database_url.config(default=os.getenv('DATABASE_URL'))
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': env('DB_NAME'),
+        'USER': env('DB_USER'),
+        'PASSWORD': env('DB_PASSWORD'),
+        'HOST': env('DB_HOST'), 
+        'PORT': '',
+        'OPTIONS': {
+            'charset': 'utf8mb4',  # UTF-8 を使用する場合
+        },
+    }
 }
 
 AUTH_PASSWORD_VALIDATORS = [
