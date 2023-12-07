@@ -97,7 +97,7 @@ DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 MEDIA_URL = '/media/'
 
 
-MODEL_PATH = BASE_DIR / "keras_Model.h5"
+MODEL_PATH = BASE_DIR / "keras_model.h5"
 LABELS_PATH = BASE_DIR / "labels.txt"
 
 CLOUDINARY_STORAGE = {
