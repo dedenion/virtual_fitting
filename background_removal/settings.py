@@ -2,7 +2,7 @@
 
 from pathlib import Path
 import os
-from decouple import Config
+from decouple import Config, Csv
 import dj_database_url 
 import cloudinary
 import environ
@@ -11,6 +11,11 @@ import environ
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 env = environ.Env()
+# .envファイルが存在する場合はロードする
+env_file = Path(".") / ".env"
+if env_file.exists():
+    environ.Env.read_env(str(env_file))
+
 env.read_env(os.path.join(BASE_DIR, '.env'))
 
 SECRET_KEY = 'fhalfahghiaghiahvhpg843ytygsjroeigjirinbknitrh348ujijguj8ujgdngire834jgjkgnsjrgiu34jgihosghie4ru934jgjeoigjo34uegoirgj39485u98w384yuwgjlrjgu845oujgeojg498uyg4eigjshoie4tug29ty483ytgirdngboerhgw9utg4j3itj34jgy7wygsnvglkeh4oyt34ut20ut3ihgiojeo9u48to4iwhgjsljrigut43ut8gojgjmosirwug4utoiwj39gu8uj4j398tuosiejgno4ij493yut98jifgenwgjoi438uty8shiogj4893utosjgi4o389tu98sjgohes4'
@@ -64,17 +69,7 @@ WSGI_APPLICATION = "background_removal.wsgi.application"
 
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': env('DB_NAME'),
-        'USER': env('DB_USER'),
-        'PASSWORD': env('DB_PASSWORD'),
-        'HOST': env('DB_HOST'), 
-        'PORT': '',
-        'OPTIONS': {
-            'charset': 'utf8mb4',  # UTF-8 を使用する場合
-        },
-    }
+    'default': dj_database_url.config(conn_max_age=600, ssl_require=True)
 }
 
 AUTH_PASSWORD_VALIDATORS = [
