@@ -3,7 +3,7 @@
 from pathlib import Path
 import os
 from decouple import Config
-from dj_database_url 
+import dj_database_url
 import cloudinary
 import environ
 
