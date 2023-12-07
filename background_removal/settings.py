@@ -64,7 +64,7 @@ WSGI_APPLICATION = "background_removal.wsgi.application"
 
 
 DATABASES = {
-    'default': dj_database_url.config(default='mysql://user:password@host/database'),
+    'default': dj_database_url.config(default='mysql://django_user:Mitsuya328328328!!!@localhost/huku'),
 }
 
 AUTH_PASSWORD_VALIDATORS = [
