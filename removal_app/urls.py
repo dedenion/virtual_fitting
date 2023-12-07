@@ -16,3 +16,4 @@ urlpatterns = [
     path('delete_image/<str:filename>/', delete_image, name='delete_image'),
     path('fitting/', views.fitting, name='fitting')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
