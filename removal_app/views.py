@@ -20,7 +20,7 @@ from celery.result import AsyncResult
 
 class YourTemplateView(TemplateView):
     template_name = 'index.html'
-from . import tasks 
+from .tasks import process_and_remove_background, classify_image
 
 
 
@@ -68,11 +68,12 @@ def remove_background(request):
             image_data = form.cleaned_data['image'].file.read()
             
             # Celeryタスクの呼び出し
-            processed_image = process_and_remove_background.delay(image_data).get()
-            classify_image.delay(processed_image, form.cleaned_data['image'].name)
+            processed_image = process_and_remove_background.delay(image_data)
+            # ここでget()を使うと同期処理になるため、使う場合は注意
+            classify_image.delay(processed_image.get(), form.cleaned_data['image'].name)
 
             # クラス名を取得
-            class_name, confidence_score, _ = classify_image(processed_image, form.cleaned_data['image'].name)  # filename を渡す
+            class_name, confidence_score, _ = classify_image(processed_image.get(), form.cleaned_data['image'].name)  # filename を渡す
 
             # 画像分類の結果を表示
             print("Class:", class_name)
