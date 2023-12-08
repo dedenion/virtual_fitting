@@ -58,16 +58,8 @@ def remove_background(request):
     class_name = None
     confidence_score = None
 
-def remove_background(request):
-    # セッションから前回の画像をクリア
     if 'output_image_path' in request.session:
         del request.session['output_image_path']
-
-    fs_gallery = FileSystemStorage(location=settings.MEDIA_ROOT)
-
-    # 分類結果の変数を初期化
-    class_name = None
-    confidence_score = None
 
     if request.method == 'POST':
         form = ImageUploadForm(request.POST, request.FILES)
@@ -93,7 +85,6 @@ def remove_background(request):
             image_path = save_to_media(base64.b64decode(processed_image), image_filename)
             request.session['output_image_path'] = fs_gallery.url(image_path)
 
-
             # ファイルパスではなく、メディアURLをセッションに保存
             request.session['output_image_path'] = fs_gallery.url(image_path)  # URL を保存
 
@@ -101,6 +92,7 @@ def remove_background(request):
         form = ImageUploadForm()
 
     return render(request, 'remove_background.html', {'form': form, 'output_image_path': request.session.get('output_image_path'), 'class_name': class_name, 'confidence_score': confidence_score})
+
 
 
 
