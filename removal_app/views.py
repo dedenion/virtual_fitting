@@ -21,7 +21,7 @@ from celery.result import AsyncResult
 class YourTemplateView(TemplateView):
     template_name = 'index.html'
 from . import tasks 
-from tasks import process_and_remove_background, classify_image
+
 
 
 
