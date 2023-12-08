@@ -32,6 +32,6 @@ rembg==2.0.52
 mysqlclient==2.1.0
 
 celery
-redis
 django-celery-results==2.5.1
 
+pika==1.2.0

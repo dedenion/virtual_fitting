@@ -112,8 +112,8 @@ CLOUDINARY_STORAGE = {
 }
 
 # Celery設定
-# ブローカーにredisを指定
-CELERY_BROKER_URL = os.environ.get('REDIS_URL', 'redis://localhost:6379/1')
+# Celery settings for CloudAMQP
+CELERY_BROKER_URL = os.environ.get('CLOUDAMQP_URL', 'amqp://')
 # 結果の保存先(今回はMYSQL)
 CELERY_RESULT_BACKEND = "django-db"
 # task状態が開始になったかを確認できるための設定

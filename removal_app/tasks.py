@@ -9,10 +9,22 @@ from django.utils import timezone
 import uuid
 from django.conf import settings
 
+from celery import Celery
+import os
+
+# CloudAMQPのURLを環境変数から取得する
+broker_url = os.environ.get('CLOUDAMQP_URL', 'amqp://')
+
+app = Celery('tasks', broker=broker_url)
+
+# Load the model
+model = load_model("keras_model.h5", compile=False)
+
+# Load the labels
+class_names = open("labels.txt", "r").readlines()
+
 @shared_task
 def process_and_remove_background(image_data):
-    model = load_model(os.path.join(settings.BASE_DIR, "keras_model.h5"), compile=False)
-    class_names = open(os.path.join(settings.BASE_DIR, "labels.txt"), "r").readlines()
     # 画像を処理して縦横の幅が広い方をカットし、正方形に加工
     processed_image = process_image(Image.open(io.BytesIO(image_data)))
 
@@ -23,8 +35,6 @@ def process_and_remove_background(image_data):
 
 @shared_task
 def classify_image(output_image, filename):
-    model = load_model(os.path.join(settings.BASE_DIR, "keras_model.h5"), compile=False)
-    class_names = open(os.path.join(settings.BASE_DIR, "labels.txt"), "r").readlines()
     # Create the array of the right shape to feed into the keras model
     data = np.ndarray(shape=(1, 224, 224, 3), dtype=np.float32)
 
