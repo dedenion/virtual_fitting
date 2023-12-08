@@ -74,9 +74,9 @@ def remove_background(request):
 
         if form.is_valid():
             image_data = form.cleaned_data['image'].file.read()
-
+            
             # Celeryタスクの呼び出し
-            process_and_remove_background.delay(image_data)
+            processed_image = process_and_remove_background.delay(image_data).get()
             classify_image.delay(processed_image, form.cleaned_data['image'].name)
 
             # クラス名を取得
