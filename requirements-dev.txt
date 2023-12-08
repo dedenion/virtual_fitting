@@ -30,3 +30,6 @@ django-cloudinary-storage~=0.3.0
 
 rembg==2.0.52
 mysqlclient==2.1.0
+
+celery
+redis

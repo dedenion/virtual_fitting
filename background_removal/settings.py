@@ -34,7 +34,7 @@ INSTALLED_APPS = [
     'cloudinary_storage',
     'cloudinary',
     "removal_app",
-    
+    'django_celery_results',
 ]
 
 MIDDLEWARE = [
@@ -110,3 +110,11 @@ CLOUDINARY_STORAGE = {
     'API_KEY': env('CLOUDINARY_API_KEY'),
     'API_SECRET': env('CLOUDINARY_API_SECRET'),
 }
+
+# Celery設定
+# ブローカーにredisを指定
+CELERY_BROKER_URL = os.environ.get('REDIS_URL', 'redis://localhost:6379/1')
+# 結果の保存先(今回はMYSQL)
+CELERY_RESULT_BACKEND = "django-db"
+# task状態が開始になったかを確認できるための設定
+CELERY_TASK_TRACK_STARTED = True

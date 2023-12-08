@@ -17,7 +17,7 @@ from PIL import Image, ImageOps
 import numpy as np
 from django import template
 
-
+from celery.result import AsyncResult
 
 class YourTemplateView(TemplateView):
     template_name = 'index.html'
@@ -75,11 +75,9 @@ def remove_background(request):
         if form.is_valid():
             image_data = form.cleaned_data['image'].file.read()
 
-            # 画像の加工と背景除去
-            processed_image = process_and_remove_background(image_data)
-            
-            # 背景除去
-            output_image = rembg.remove(base64.b64decode(processed_image))
+            # Celeryタスクの呼び出し
+            process_and_remove_background.delay(image_data)
+            classify_image.delay(processed_image, form.cleaned_data['image'].name)
 
             # クラス名を取得
             class_name, confidence_score, _ = classify_image(processed_image, form.cleaned_data['image'].name)  # filename を渡す
@@ -104,31 +102,7 @@ def remove_background(request):
 
     return render(request, 'remove_background.html', {'form': form, 'output_image_path': request.session.get('output_image_path'), 'class_name': class_name, 'confidence_score': confidence_score})
 
-def classify_image(output_image, filename):
-    # Create the array of the right shape to feed into the keras model
-    data = np.ndarray(shape=(1, 224, 224, 3), dtype=np.float32)
 
-    # Load and preprocess the image
-    image = Image.open(io.BytesIO(base64.b64decode(output_image))).convert("RGB")
-    size = (224, 224)
-    image = ImageOps.fit(image, size, Image.Resampling.LANCZOS)
-    image_array = np.asarray(image)
-    normalized_image_array = (image_array.astype(np.float32) / 127.5) - 1
-    data[0] = normalized_image_array
-
-    # Predict the model
-    prediction = model.predict(data)
-    index = np.argmax(prediction)
-    
-    # Get the class name using [2:] to remove leading spaces
-    class_name = class_names[index][2:].strip()
-    
-    confidence_score = prediction[0][index]
-
-    # ファイル名を生成
-    image_filename = generate_filename({"class_name": class_name}, filename, class_name)
-
-    return class_name, confidence_score, image_filename
 
 
 # removal_app/views.py
@@ -145,14 +119,7 @@ def generate_filename(instance, filename, class_name):
     return unique_filename
 
 
-def process_and_remove_background(image_data):
-    # 画像を処理して縦横の幅が広い方をカットし、正方形に加工
-    processed_image = process_image(Image.open(io.BytesIO(image_data)))
 
-    # 背景除去
-    output_image = rembg.remove(processed_image)
-
-    return base64.b64encode(output_image).decode("utf-8")
 
 def process_image(image):
     # 縦横の幅が広い方を取得
