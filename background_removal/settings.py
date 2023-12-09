@@ -112,9 +112,8 @@ CLOUDINARY_STORAGE = {
 }
 
 # Celery設定
-# Celery settings for CloudAMQP
-CELERY_BROKER_URL = os.environ.get('CLOUDAMQP_URL', 'amqp://')
-# 結果の保存先(今回はCloudAMQPを使用する場合、CloudAMQPは結果を直接保存しないのでNoneを指定)
-CELERY_RESULT_BACKEND = None
+# Celeryの設定
+CELERY_BROKER_URL = os.environ.get('CLOUDAMQP_URL', 'amqp://')  # CloudAMQPの接続URLを環境変数から取得
+CELERY_RESULT_BACKEND = 'rpc://'  # CloudAMQPを結果バックエンドとして指定
 # task状態が開始になったかを確認できるための設定
 CELERY_TASK_TRACK_STARTED = True
