@@ -68,12 +68,13 @@ def remove_background(request):
             image_data = form.cleaned_data['image'].file.read()
             
             # Celeryタスクの呼び出し
-            processed_image = process_and_remove_background.delay(image_data)
-            # ここでget()を使うと同期処理になるため、使う場合は注意
-            classify_image.delay(processed_image.get(), form.cleaned_data['image'].name)
+            processed_image_task = process_and_remove_background.delay(image_data)
+            # classify_imageのタスクも非同期で実行
+            classify_image.delay(processed_image_task.get(), form.cleaned_data['image'].name)
 
             # クラス名を取得
-            class_name, confidence_score, _ = classify_image(processed_image.get(), form.cleaned_data['image'].name)  # filename を渡す
+            processed_image = processed_image_task.get()
+            class_name, confidence_score, _ = classify_image(processed_image, form.cleaned_data['image'].name)
 
             # 画像分類の結果を表示
             print("Class:", class_name)

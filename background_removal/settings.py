@@ -114,7 +114,7 @@ CLOUDINARY_STORAGE = {
 # Celery設定
 # Celery settings for CloudAMQP
 CELERY_BROKER_URL = os.environ.get('CLOUDAMQP_URL', 'amqp://')
-# 結果の保存先(今回はMYSQL)
-CELERY_RESULT_BACKEND = "django-db"
+# 結果の保存先(今回はCloudAMQPを使用する場合、CloudAMQPは結果を直接保存しないのでNoneを指定)
+CELERY_RESULT_BACKEND = None
 # task状態が開始になったかを確認できるための設定
 CELERY_TASK_TRACK_STARTED = True
