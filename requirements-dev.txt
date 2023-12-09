@@ -35,3 +35,4 @@ celery
 django-celery-results==2.5.1
 
 pika==1.2.0
+mysqlclient
