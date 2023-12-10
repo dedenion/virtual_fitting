@@ -34,27 +34,11 @@ model = load_model("keras_model.h5", compile=False)
 # Load the labels
 class_names = open("labels.txt", "r").readlines()
 
-def save_to_media(image_data, filename):
-    # ファイルを `media` フォルダに保存
-    media_root = settings.MEDIA_ROOT
-    file_path = os.path.join(media_root, filename)
-
-    with open(file_path, 'wb') as f:
-        f.write(image_data)
-
-    return file_path
-
-# ... (他のインポートや関数の定義)
-
-# removal_app/views.py
-
-# ... (他のインポートや関数の定義)
 
 def remove_background(request):
-    output_image_path = request.session.get('output_image_path', None)
-    fs_gallery = FileSystemStorage(location=settings.MEDIA_ROOT)
+    output_image_data = None
 
-    # 分類結果の変数を初期化
+    fs_gallery = FileSystemStorage(location=settings.MEDIA_ROOT)
     class_name = None
     confidence_score = None
 
@@ -67,50 +51,27 @@ def remove_background(request):
         if form.is_valid():
             image_data = form.cleaned_data['image'].file.read()
             
-            # Celeryタスクの呼び出し
             processed_image_task = process_and_remove_background.delay(image_data)
-            # classify_imageのタスクも非同期で実行
             classify_image.delay(processed_image_task.get(), form.cleaned_data['image'].name)
 
-            # クラス名を取得
             processed_image = processed_image_task.get()
             class_name, confidence_score, _ = classify_image(processed_image, form.cleaned_data['image'].name)
 
-            # 画像分類の結果を表示
-            print("Class:", class_name)
-            print("Confidence Score:", confidence_score)
-
-            # 画像分類の結果をもとにファイル名を生成
             image_filename = generate_filename({"class_name": class_name}, form.cleaned_data['image'].name, class_name)
 
-            # 画像を `media` フォルダに保存
-            image_path = save_to_media(base64.b64decode(processed_image), image_filename)
-            request.session['output_image_path'] = fs_gallery.url(image_path)
+            output_image_data = base64.b64decode(processed_image)
 
-            # ファイルパスではなく、メディアURLをセッションに保存
-            request.session['output_image_path'] = fs_gallery.url(image_path)  # URL を保存
+            request.session['output_image_path'] = fs_gallery.url(image_filename)
 
     else:
         form = ImageUploadForm()
 
+    if output_image_data:
+        return HttpResponse(output_image_data, content_type='image/png')
+
     return render(request, 'remove_background.html', {'form': form, 'output_image_path': request.session.get('output_image_path'), 'class_name': class_name, 'confidence_score': confidence_score})
 
 
-
-
-
-# removal_app/views.py
-
-def generate_filename(instance, filename, class_name):
-    now = timezone.now()
-    # instanceが存在し、class_nameが'tops'または'pants'の場合、その値を優先して使用
-    if instance and 'class_name' in instance:
-        class_name = instance['class_name']
-    else:
-        print(f"Using 'unknown' for class_name")
-        class_name = 'unknown'
-    unique_filename = f"{now.strftime('%Y%m%d%H%M%S')}_{uuid.uuid4()}_{class_name}.jpg"
-    return unique_filename
 
 
 
