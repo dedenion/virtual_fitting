@@ -1,139 +1,71 @@
-# removal_app/views.py
-import os
-from django.conf import settings
-from django.http import HttpResponse, JsonResponse
-from django.shortcuts import render
-from django.views.generic import TemplateView
+from django.http import JsonResponse
 from .forms import ImageUploadForm
-from django.core.files.storage import FileSystemStorage
-from django.utils import timezone
-import uuid
 import rembg
 import base64
 from PIL import Image, ImageOps
 import io
-from tensorflow.keras.models import load_model
+from keras.models import load_model
 import numpy as np
-from django import template
+from django.shortcuts import render
 
-from celery.result import AsyncResult
-
-class YourTemplateView(TemplateView):
-    template_name = 'index.html'
-from .tasks import process_and_remove_background, classify_image
-
-
-
-
-from django.core.files.base import ContentFile
-
-
-# Load the model
-model = load_model("keras_model.h5", compile=False)
-
-# Load the labels
-class_names = open("labels.txt", "r").readlines()
-
+# モデルとクラス名の読み込み
+model = load_model("keras_Model.h5", compile=False)
+class_names = [line.strip() for line in open("labels.txt", "r")]
 
 def remove_background(request):
-    output_image_data = None
-
-    fs_gallery = FileSystemStorage(location=settings.MEDIA_ROOT)
-    class_name = None
-    confidence_score = None
-
-    if 'output_image_path' in request.session:
-        del request.session['output_image_path']
-
     if request.method == 'POST':
         form = ImageUploadForm(request.POST, request.FILES)
-
         if form.is_valid():
+            # フォームから画像を取得
             image_data = form.cleaned_data['image'].file.read()
-            
-            processed_image_task = process_and_remove_background.delay(image_data)
-            classify_image.delay(processed_image_task.get(), form.cleaned_data['image'].name)
 
-            processed_image = processed_image_task.get()
-            class_name, confidence_score, _ = classify_image(processed_image, form.cleaned_data['image'].name)
+            # 画像処理と背景除去
+            processed_image = process_image(image_data)
+            output_image = rembg.remove(processed_image)
 
-            image_filename = generate_filename({"class_name": class_name}, form.cleaned_data['image'].name, class_name)
+            # 画像分類
+            class_name, confidence_score = classify_image(output_image)
 
-            output_image_data = base64.b64decode(processed_image)
-
-            request.session['output_image_path'] = fs_gallery.url(image_filename)
-
+            # レスポンスを返す
+            return JsonResponse({
+                'processed_image': base64.b64encode(processed_image).decode("utf-8"),
+                'output_image': base64.b64encode(output_image).decode("utf-8"),
+                'class_name': class_name,
+                'confidence_score': confidence_score
+            })
+        # フォームが無効な場合の処理
+        # エラーメッセージを返すか、フォームエラーの詳細を返すなどの対応が必要です
     else:
+        # GETリクエストに対する処理
         form = ImageUploadForm()
+        context = {'form': form}
+        return render(request, 'remove_background.html', context)
 
-    if output_image_data:
-        return HttpResponse(output_image_data, content_type='image/png')
+def classify_image(output_image):
+    # ここで必要な画像の前処理を行う（背景除去後の画像を扱う）
+    # この関数内での前処理は背景除去後の画像に対してのみ必要
+    # その後画像分類を行うための処理を追加する
+    image = Image.open(io.BytesIO(output_image)).convert("RGB")
+    size = (224, 224)
+    image = ImageOps.fit(image, size, Image.Resampling.LANCZOS)
+    image_array = np.asarray(image)
+    normalized_image_array = (image_array.astype(np.float32) / 127.5) - 1
 
-    return render(request, 'remove_background.html', {'form': form, 'output_image_path': request.session.get('output_image_path'), 'class_name': class_name, 'confidence_score': confidence_score})
+    # 以下は現在の classify_image() 関数と同様の画像分類の処理を追加する
 
+    data = np.ndarray(shape=(1, 224, 224, 3), dtype=np.float32)
+    data[0] = normalized_image_array
+    prediction = model.predict(data)
+    index = np.argmax(prediction)
+    class_name = class_names[index]
+    confidence_score = float(prediction[0][index])
+    return class_name, confidence_score
 
-
-
-
-
-def process_image(image):
-    # 縦横の幅が広い方を取得
+def process_image(image_data):
+    image = Image.open(io.BytesIO(image_data))
     max_size = max(image.size)
-
-    # 正方形に切り取り
     new_image = image.crop((0, 0, max_size, max_size))
-
-    # 切り取った画像をバイト型に変換
     output_image = io.BytesIO()
     new_image.save(output_image, format='PNG')
     processed_image = output_image.getvalue()
-
     return processed_image
-
-
-
-
-
-from django.contrib.staticfiles.storage import staticfiles_storage
-# ...
-register = template.Library()
-@register.filter(name='filename_from_image')
-def filename_from_image(value):
-    return value.split('/')[-1]
-
-# ...
-
-def image_gallery(request):
-    gallery_dir = settings.MEDIA_ROOT  # メディアフォルダのパス
-
-    images = {'tops': [], 'pants': []}
-
-    for image in os.listdir(gallery_dir):
-        image_path = os.path.join(settings.MEDIA_URL, image)
-        
-        if 'tops' in image:
-            images['tops'].append(image_path)
-        elif 'pants' in image:
-            images['pants'].append(image_path)
-
-    context = {
-        'images_tops': images['tops'],
-        'images_pants': images['pants'],
-    }
-
-    return render(request, 'image_gallery.html', context)
-
-def delete_image(request, filename):
-    file_path = os.path.join(settings.MEDIA_ROOT, filename)
-
-    if os.path.exists(file_path):
-        os.remove(file_path)
-        return JsonResponse({'message': 'Image deleted successfully.'})
-    else:
-        return JsonResponse({'error': 'File not found.'}, status=404)
-
-def fitting(request):
-    image1 = request.GET.get('image1', '')
-    image2 = request.GET.get('image2', '')
-
-    return render(request, 'fitting.html', {'selectedImages': [image1, image2]})

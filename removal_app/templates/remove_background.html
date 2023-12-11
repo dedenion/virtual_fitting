@@ -79,6 +79,27 @@ ul {
   }
 }
 
+#imageList {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+  
+  #imageList img {
+    width: 30%; /* 3つ横並びにするための幅調整 */
+    margin: 5px; /* 画像の間隔 */
+    box-sizing: border-box;
+  }
+  
+  /* 3つ以上の場合は中央揃えで表示 */
+  @media screen and (min-width: 768px) {
+    #imageList {
+      justify-content: center;
+    }
+  }
+  
 
 
 
@@ -397,8 +418,7 @@ transform: translateY(20px);
                 <ul>
                     <li><a href="{% url 'home' %}">Home</a></li>
                     <li><a href="{% url 'remove_background' %}">Remove Background</a></li>
-                    <li><a href="{% url 'image_gallery' %}">Image Gallery</a></li>
-                    <li><a href="{% url 'fitting' %}">fitting room</a></li>
+                    
                 </ul>
             </nav>
     
@@ -406,49 +426,70 @@ transform: translateY(20px);
     
     </header>
 
-
-
     <div class="setumei">
         <h1>Remove Background</h1>
-        <p>フォームに画像をアップロードすると、画像を正方形加工し、背景を除去します。<br>次に、機械学習による画像分類を行っており、topsとpantsを分類します。<br>背景が除去された画像と分類結果が表示されます。<br>保存された画像はImage Galleryにて確認できます。</p>
+        <p>フォームに画像をアップロードすると、画像を正方形加工し、背景を除去します。
+            <br>次に、機械学習による画像分類を行い、topsとpantsを分類します。
+            <br>Classは分類結果、Confidence Scoreは予測結果の信頼度、確信度を表します。
+            <br>画像は一定数まで追加でアップロードできますが、サイトをリロードするとアップロードした画像が消えてしまいますので注意してください。
+            <br>画像はドラッグして好きな位置に配置することができるので、画像同士を重ね合わせるなどして、服同士の相性などを確かめてみることができます。
+            <br>また、画像をタップしマウスホイールを上下に移動することで画像の拡大縮小を行うことができます。
+            <br>マウスがない場合、タッチパッドを用いて二本指でタッチし上下に動かすことで拡大縮小が可能です。</p>
         </div>
 
         <div style="margin-top: 200px; margin-bottom: 200px;"></div>
 
+
+
+
+
+
+
+
+
+
+
     <div class="upload-image">
     <h1>Upload Image</h1>
-    <form  method="post" enctype="multipart/form-data">
+    <form id="imageForm" method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        {{ form.as_p }}
-        <input class="zyokyoform" type="submit" value="Background removal and classification">
+        <input type="file" name="image" accept="image/*" required>
+        <input type="submit" value="Process Image">
     </form>
     </div>
+
+
+
+
+
+
+
 
     <div style="margin-top: 200px; margin-bottom: 200px;">
         <!-- ここにコンテンツを配置 -->
     </div>
 
-    
 
-    <div class="loading-text">Removing image background and classifying images.</div>
 
-        <div class="zyokyogazou">
-        {% if output_image_path %}
-            <h2>背景が除去された画像:</h2>
-            <img src="{{ output_image_path }}" alt="Image" class="output-image" width="300" height="300">
-        {% endif %}
-        </div>
 
-        <div class="zyokyogazou">
-        {% if class_name and confidence_score %}
-            <h2>分類結果:</h2>
-            <p>Class: {{ class_name }}</p>
-            <p>Confidence Score: {{ confidence_score }}</p>
-        {% endif %}
-        </div>
+
+
+
+
+    <div id="imageResult">
+        <ul id="imageList"></ul>
     </div>
 
-    <div style="margin-top: 600px; margin-bottom: 600px;">
+
+
+
+
+
+
+
+
+
+    <div style="margin-top: 600px; margin-bottom: 3000px;">
         <!-- ここにコンテンツを配置 -->
     </div>
 
@@ -460,8 +501,122 @@ transform: translateY(20px);
         <p class="copyright">© 2023 Virtual fitting room</p>
     </footer>
 
-    <script src="https://code.jquery.com/jquery-1.9.1.js"></script>
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+    
 <script>
+
+// 画像の拡大縮小機能を追加する関数
+function addZoomFunctionality() {
+    $(".draggable-image").on("wheel", function(event) {
+        event.preventDefault();
+
+        var scaleFactor = 1.007; // 拡大縮小のスケールファクター（任意の値）
+        var deltaY = event.originalEvent.deltaY;
+        var currentWidth = $(this).width();
+        var newWidth = currentWidth;
+
+        if (deltaY < 0) {
+            newWidth *= scaleFactor; // マウスホイールを上にスクロールすると拡大
+        } else {
+            newWidth /= scaleFactor; // マウスホイールを下にスクロールすると縮小
+        }
+
+        $(this).css("width", newWidth + "px");
+    });
+}
+
+
+// ドラッグアンドドロップの機能を提供する関数
+function enableDragAndDrop() {
+    addZoomFunctionality();
+    var zIndexCounter = 1;
+    var isDragging = false;
+    var activeImage = null;
+    var initialZIndex = 1;
+
+    $(document).on("mouseup", function () {
+        isDragging = false;
+    });
+
+    $(".draggable-image").on("mousedown", function (e) {
+        isDragging = true;
+        activeImage = this;
+        initialZIndex = $(activeImage).css("z-index");
+        $(activeImage).css("z-index", zIndexCounter++);
+    });
+
+    $(".draggable-image").on("mouseup", function () {
+        if (activeImage && activeImage !== this) {
+            $(activeImage).css("z-index", initialZIndex);
+            initialZIndex += 1;
+            activeImage = this;
+            $(activeImage).css("z-index", zIndexCounter++);
+        }
+    });
+
+    $(document).on("mousemove", function (e) {
+        if (isDragging) {
+            var offsetX = e.pageX - $(activeImage).width() / 2;
+            var offsetY = e.pageY - $(activeImage).height() / 2;
+            $(activeImage).css({
+                "position": "absolute",
+                "left": offsetX + "px",
+                "top": offsetY + "px"
+            });
+        }
+    });
+}
+
+
+
+// 画像追加のフォーム送信処理
+$('#imageForm').submit(function(event) {
+    event.preventDefault();
+
+    var formData = new FormData(this);
+    $.ajax({
+        url: '{% url "process_image" %}',
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function(response) {
+            var outputImage = response.output_image;
+            var className = response.class_name;
+            var confidenceScore = response.confidence_score;
+
+            var img = document.createElement("img");
+            img.src = "data:image/png;base64," + outputImage;
+            img.style.width = "300px";
+            img.style.height = "auto";
+            img.classList.add("draggable-image");
+            $("#imageList").append(img);
+
+            var classificationInfo = "Class: " + className + "<br> Confidence Score: " + confidenceScore.toFixed(4);
+            $("#imageList").append("<p>" + classificationInfo + "</p>");
+
+            enableDragAndDrop(); // 追加した画像にドラッグアンドドロップ機能を適用
+        },
+        error: function(xhr, status, error) {
+            console.error(error);
+        }
+    });
+});
+
+
+</script>
+    
+
+
+
+
+
+
+
+    <script>
 // Sticky Header
 $(window).scroll(function() {
 
