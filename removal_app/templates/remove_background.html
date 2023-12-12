@@ -429,8 +429,6 @@ transform: translateY(20px);
     <div class="setumei">
         <h1>Remove Background</h1>
         <p>フォームに画像をアップロードすると、画像を正方形加工し、背景を除去します。
-            <br>次に、機械学習による画像分類を行い、topsとpantsを分類します。
-            <br>Classは分類結果、Confidence Scoreは予測結果の信頼度、確信度を表します。
             <br>画像は一定数まで追加でアップロードできますが、サイトをリロードするとアップロードした画像が消えてしまいますので注意してください。
             <br>画像はドラッグして好きな位置に配置することができるので、画像同士を重ね合わせるなどして、服同士の相性などを確かめてみることができます。
             <br>また、画像をタップしマウスホイールを上下に移動することで画像の拡大縮小を行うことができます。
@@ -595,8 +593,7 @@ $('#imageForm').submit(function(event) {
             img.classList.add("draggable-image");
             $("#imageList").append(img);
 
-            var classificationInfo = "Class: " + className + "<br> Confidence Score: " + confidenceScore.toFixed(4);
-            $("#imageList").append("<p>" + classificationInfo + "</p>");
+            
 
             enableDragAndDrop(); // 追加した画像にドラッグアンドドロップ機能を適用
         },
