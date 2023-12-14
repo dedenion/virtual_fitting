@@ -10,5 +10,5 @@ dj-static
 python-decouple
 django-environ
 psycopg2-binary
-whitenoise
+
 
